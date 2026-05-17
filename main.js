@@ -16,4 +16,6 @@ const bot = BotManager.getCurrentBot();
  * (bigint) msg.logId: 각 메세지의 고유 id
  * (bigint) msg.channelId: 각 방의 고유 id
  */
-bot.addListener(Event.MESSAGE, (msg) => {});
+bot.addListener(Event.MESSAGE, (msg) => {
+  if (msg.content === "!hi") msg.reply("Hello, World!");
+});
