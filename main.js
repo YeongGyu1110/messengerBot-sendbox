@@ -27,7 +27,7 @@ bot.addListener(Event.MESSAGE, (msg) => {
     if (!fs.exists(`${root}/${FolderName}/`)) fs.createDir(`${root}/${FolderName}/`);
     const path = `${root}/${FolderName}/helloWorld.txt`;
 
-    fs.save(path, `Hello, World!`);
+    fs.write(path, `Hello, World!`);
 
     msg.reply(`${path}`);
   }
