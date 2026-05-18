@@ -18,9 +18,9 @@ const bot = BotManager.getCurrentBot();
  * (bigint) msg.channelId: 각 방의 고유 id
  */
 bot.addListener(Event.MESSAGE, (msg) => {
-    if (msg.content === "!hi") msg.reply("Hello, World!");
-    if (msg.content === "!save"){
-      const path = fs.getSdcardPath();
-      msg.reply(`${path}`);
-    }
+  if (msg.content === "!hi") msg.reply("Hello, World!");
+  if (msg.content === "!save"){
+    const path = fs.getSdcardPath();
+    msg.reply(`${path}`);
+  }
 });
