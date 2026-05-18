@@ -20,7 +20,15 @@ const bot = BotManager.getCurrentBot();
 bot.addListener(Event.MESSAGE, (msg) => {
   if (msg.content === "!hi") msg.reply("Hello, World!");
   if (msg.content === "!save"){
-    const path = fs.getSdcardPath();
+    // 반환된 경로는 "/sdcard"라고 가정하고 개발한다.
+    const root = fs.getSdcardPath();
+    const FolderName = `main`;
+
+    if (!fs.exists(`${root}/${FolderName}/`)) fs.createDir(`${root}/${FolderName}/`);
+    const path = `${root}/${FolderName}/helloWorld.txt`;
+
+    fs.save(path, `Hello, World!`);
+
     msg.reply(`${path}`);
   }
 });
