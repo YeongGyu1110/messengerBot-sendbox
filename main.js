@@ -1,6 +1,44 @@
 const fs = FileStream;
 const bot = BotManager.getCurrentBot();
 
+const saveDataPath = `${fs.getSdcardPath()}/fileStream/${bot.getName()}/`;
+const userDataFileName = `userData.json`;
+
+class User {
+  constructor(name, hash) {
+    this.name = name;
+    this.hash = hash;
+  }
+
+  saveUserData() {
+    DATA.save(`${saveDataPath}${userDataFileName}`, this);
+  }
+}
+
+const DATA = {};
+DATA.read = function (path, isJSON = false) {
+  if (fs.isFile(path)) {    
+    if (isJSON) return fs.readJSON(path);
+    return JSON.parse(fs.read(path));
+  }
+  return null;
+};
+DATA.save = function (path, data, append = false) {
+  fs.save(path, data, append);
+}
+
+
+const userData = (() => {
+  // 만약 해당 경로에 파일이 있다
+  if (fs.isFile(`${saveDataPath}${userDataFileName}`)) {
+    // 읽어서 userData에 집어넣기
+    return DATA.read(`${saveDataPath}${userDataFileName}`, true);
+  }
+  // 파일이 없다면 빈 객체 반환
+  return {};
+});
+
+
 /**
  * (string) msg.content: 메시지의 내용
  * (string) msg.room: 메시지를 받은 방 이름
@@ -17,18 +55,19 @@ const bot = BotManager.getCurrentBot();
  * (bigint) msg.logId: 각 메세지의 고유 id
  * (bigint) msg.channelId: 각 방의 고유 id
  */
-bot.addListener(Event.MESSAGE, (msg) => {
-  if (msg.content === "!hi") msg.reply("Hello, World!");
-  if (msg.content === "!save"){
-    // 반환된 경로는 "/sdcard"라고 가정하고 개발한다.
-    const root = fs.getSdcardPath();
-    const FolderName = `main`;
+bot.addListener(Event.MESSAGE, (message) => {
+  const msg = message.content.trim().toLowerCase();
 
-    if (!fs.exists(`${root}/${FolderName}/`)) fs.createDir(`${root}/${FolderName}/`);
-    const path = `${root}/${FolderName}/helloWorld.txt`;
+  let user = userData[message.author.hash];
 
-    fs.write(path, `Hello, World!`);
-
-    msg.reply(`${path}`);
+  if (msg === "!hi") message.reply("Hello, World!");
+  if (msg === "!create") {
+    if (!user) {
+      user = new User(message.author.name, message.author.hash);
+      user.saveUserData();
+      message.reply("사용자 객체 생성됨!");
+    } else {
+      message.reply("이미 사용자 객체가 존재합니다.");
+    }
   }
 });
