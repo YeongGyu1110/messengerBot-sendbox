@@ -4,13 +4,10 @@ const bot = BotManager.getCurrentBot();
 const saveDataPath = `${fs.getSdcardPath()}/fileStream/${bot.getName()}/`;
 const userDataFileName = `userData.json`;
 
-class User {
-  constructor(name, hash) {
-    this.name = name;
-    this.hash = hash;
-  }
-
-  saveUserData() {
+function User(name, hash) {
+  this.name = name;
+  this.hash = hash;
+  this.saveUserData = function () {
     DATA.save(`${saveDataPath}${userDataFileName}`, this);
   }
 }
